@@ -14,6 +14,7 @@ class AppTest extends Unit
         $method = $this->tester::getReflectionMethod(App::class, 'loadDotEnv');
         $method->invokeArgs(null, []);
         $this->assertFalse(getenv('APP_ENV'));
+        putenv('APP_ENV=dev');
     }
 
     public function testSetErrorHandler(): void
