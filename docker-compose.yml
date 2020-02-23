@@ -1,0 +1,27 @@
+version: '3'
+services:
+    app:
+        container_name: app
+        build: .
+        restart: always
+        volumes:
+            - .:/app
+            - ./docker/app/conf/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+            - socks:/socks
+        environment:
+            - APP_ENV=dev
+            - PHAN_DISABLE_XDEBUG_WARN=1
+            - PHAN_ALLOW_XDEBUG=0
+    nginx:
+        container_name: nginx
+        build: ./docker/nginx
+        restart: always
+        volumes:
+            - .:/app
+            - socks:/socks
+        ports:
+            - 80:80
+        depends_on:
+            - app
+volumes:
+    socks:
