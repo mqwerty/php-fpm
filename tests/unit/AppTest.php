@@ -16,19 +16,6 @@ class AppTest extends Unit
         $this->assertFalse(getenv('APP_ENV'));
     }
 
-    public function testIniSet(): void
-    {
-        $method = $this->tester::getReflectionMethod(App::class, 'setIni');
-
-        putenv('APP_ENV=prod');
-        $method->invokeArgs(null, []);
-        $this->assertContains(ini_get('display_errors'), ['', 0, '0', 'Off', 'off']);
-
-        putenv('APP_ENV=dev');
-        $method->invokeArgs(null, []);
-        $this->assertContains(ini_get('display_errors'), [1, '1', 'On', 'on']);
-    }
-
     public function testSetErrorHandler(): void
     {
         $method = $this->tester::getReflectionMethod(App::class, 'setErrorHandler');

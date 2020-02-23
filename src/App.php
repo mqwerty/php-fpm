@@ -11,25 +11,12 @@ final class App
     public function __construct()
     {
         self::loadDotEnv();
-        self::setIni();
         self::setErrorHandler();
     }
 
     private static function loadDotEnv(): void
     {
         Dotenv::createImmutable(__DIR__ . '/..')->load();
-    }
-
-    private static function setIni(): void
-    {
-        if (getenv('APP_ENV') === 'dev') {
-            error_reporting(E_ALL);
-            ini_set('display_errors', true);
-            ini_set('display_startup_errors', true);
-            assert_options(ASSERT_ACTIVE, true);
-            ini_set('opcache.validate_timestamps', true);
-            ini_set('opcache.revalidate_freq', 1);
-        }
     }
 
     private static function setErrorHandler(): void

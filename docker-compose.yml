@@ -5,9 +5,10 @@ services:
         build: .
         restart: always
         volumes:
+            - socks:/socks
             - .:/app
             - ./docker/app/conf/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-            - socks:/socks
+            - ./docker/app/conf/php/dev.ini:/usr/local/etc/php/conf.d/dev.ini
         environment:
             - APP_ENV=dev
             - PHAN_DISABLE_XDEBUG_WARN=1
@@ -17,8 +18,10 @@ services:
         build: ./docker/nginx
         restart: always
         volumes:
-            - .:/app
             - socks:/socks
+            - .:/app
+            - ./docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+            - ./docker/nginx/conf/conf.d:/etc/nginx/conf.d
         ports:
             - 80:80
         depends_on:
