@@ -10,13 +10,15 @@ final class App
 {
     public function __construct()
     {
-        self::loadDotEnv();
+        self::setEnv();
         self::setErrorHandler();
     }
 
-    private static function loadDotEnv(): void
+    private static function setEnv(): void
     {
-        Dotenv::createImmutable(__DIR__ . '/..')->load();
+        $dotenv = Dotenv::createImmutable(__DIR__ . '/..', 'default.env');
+        $dotenv->load();
+        $dotenv->required('APP_ENV')->allowedValues(['prod', 'dev']);
     }
 
     private static function setErrorHandler(): void

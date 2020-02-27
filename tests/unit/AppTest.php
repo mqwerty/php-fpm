@@ -8,17 +8,19 @@ class AppTest extends Unit
 {
     protected UnitTester $tester;
 
-    public function testLoadDotEnv(): void
+    public function testSetEnv(): void
     {
+        unset($_ENV['APP_ENV'], $_SERVER['APP_ENV']);
         putenv('APP_ENV');
-        $method = $this->tester::getReflectionMethod(App::class, 'loadDotEnv');
+        $method = $this->tester::getReflectionMethod(App::class, 'setEnv');
         $method->invokeArgs(null, []);
-        $this->assertFalse(getenv('APP_ENV'));
+        $this->assertContains(getenv('APP_ENV'), ['prod', 'dev']);
         putenv('APP_ENV=dev');
     }
 
     public function testSetErrorHandler(): void
     {
+        putenv('APP_ENV=dev');
         $method = $this->tester::getReflectionMethod(App::class, 'setErrorHandler');
         $method->invokeArgs(null, []);
         $prev_handler = set_error_handler(fn($code, $message) => false);

@@ -4,6 +4,7 @@
 /vendor/
 
 # local files
+.env
 codeception.yml
 
 # keep

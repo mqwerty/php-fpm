@@ -9,6 +9,6 @@ class Task
      */
     public static function run(): string
     {
-        return 'Hello, World!';
+        return getenv('APP_ENV');
     }
 }
