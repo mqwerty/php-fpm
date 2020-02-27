@@ -3,15 +3,18 @@
 namespace App;
 
 use Dotenv\Dotenv;
+use Whoops\Handler\HandlerInterface;
+use Whoops\Handler\JsonResponseHandler;
+use Whoops\Handler\PlainTextHandler;
 use Whoops\Handler\PrettyPageHandler;
-use Whoops\Run as ErrorHandler;
+use Whoops\Run as ErrorRunner;
 
 final class App
 {
     public function __construct()
     {
         self::setEnv();
-        self::setErrorHandler();
+        self::setErrorRunner();
     }
 
     private static function setEnv(): void
@@ -21,13 +24,28 @@ final class App
         $dotenv->required('APP_ENV')->allowedValues(['prod', 'dev']);
     }
 
-    private static function setErrorHandler(): void
+    private static function setErrorRunner(): void
     {
-        if (getenv('APP_ENV') === 'dev') {
-            (new ErrorHandler())
-                ->pushHandler(new PrettyPageHandler())
+        $handler = self::getErrorHanler();
+        if ($handler) {
+            (new ErrorRunner())
+                ->pushHandler($handler)
                 ->register();
         }
+    }
+
+    private static function getErrorHanler(): ?HandlerInterface
+    {
+        if ('cli' === PHP_SAPI) {
+            return new PlainTextHandler();
+        }
+        if (getenv('APP_ENV') === 'dev') {
+            if (isset($_SERVER['HTTP_ACCEPT']) && false !== strpos($_SERVER['HTTP_ACCEPT'], 'application/json')) {
+                return new JsonResponseHandler();
+            }
+            return new PrettyPageHandler();
+        }
+        return null;
     }
 
     public function run(): void
