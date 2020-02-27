@@ -9,6 +9,6 @@ class Task
      */
     public static function run(): string
     {
-        return getenv('APP_ENV');
+        return $_SERVER['HOSTNAME'] . PHP_EOL;
     }
 }

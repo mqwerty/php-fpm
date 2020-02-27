@@ -3,6 +3,7 @@ services:
     app:
         container_name: app
         build: .
+        image: edmitry/php-fpm
         restart: always
         volumes:
             - socks:/socks
@@ -22,11 +23,11 @@ services:
             retries: 10
     nginx:
         container_name: nginx
-        build: ./docker/nginx
+        image: edmitry/nginx
         restart: always
         volumes:
             - socks:/socks
-            - ./public:/app/public
+            - ./public:/web
         ports:
             - 80:80
         depends_on:
