@@ -27,9 +27,13 @@ class AppTest extends Unit
         restore_error_handler();
     }
 
-    public function testHello(): void
+    public function testConstructor(): void
     {
-        $result = App::hello();
-        $this->assertEquals($result, 'Hello, World!');
+        $this->assertInstanceOf(App::class, new App());
+    }
+
+    public function testRun(): void
+    {
+        (new App())->run();
     }
 }

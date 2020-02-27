@@ -13,6 +13,12 @@ services:
             - APP_ENV=dev
             - PHAN_DISABLE_XDEBUG_WARN=1
             - PHAN_ALLOW_XDEBUG=0
+            - PHP_IDE_CONFIG=serverName=app
+        healthcheck:
+            test: ["CMD", "php-fpm", "-t"]
+            interval: 1s
+            timeout: 1s
+            retries: 10
     nginx:
         container_name: nginx
         build: ./docker/nginx
@@ -24,5 +30,10 @@ services:
             - 80:80
         depends_on:
             - app
+        healthcheck:
+            test: ["CMD", "curl", "-fI", "http://localhost/nginx-status"]
+            interval: 1s
+            timeout: 1s
+            retries: 10
 volumes:
     socks:

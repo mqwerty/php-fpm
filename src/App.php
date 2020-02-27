@@ -30,11 +30,6 @@ final class App
 
     public function run(): void
     {
-        echo self::hello() . PHP_EOL;
-    }
-
-    public static function hello(): string
-    {
-        return 'Hello, World!';
+        echo Task::run();
     }
 }
