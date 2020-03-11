@@ -8,8 +8,8 @@ services:
         volumes:
             - socks:/socks
             - .:/app
-            - ./docker/app/conf/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
             - ./docker/app/conf/php/dev.ini:/usr/local/etc/php/conf.d/dev.ini
+            - ./docker/app/conf/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
         env_file:
             - ./dev.env
         environment:
