@@ -1,34 +1,34 @@
 version: '3'
 services:
-    app:
-        container_name: app
-        build: .
-        image: edmitry/php-fpm
-        restart: always
-        volumes:
-            - socks:/socks
-            - ./public:/app/public
-            - ./docker/app/conf/php/preload.ini:/usr/local/etc/php/conf.d/preload.ini
-        healthcheck:
-            test: ["CMD", "curl", "-fI", "nginx"]
-            interval: 1s
-            timeout: 1s
-            retries: 10
-    nginx:
-        container_name: nginx
-        image: edmitry/nginx
-        restart: always
-        volumes:
-            - socks:/socks
-            - ./public:/web
-        ports:
-            - 80:80
-        depends_on:
-            - app
-        healthcheck:
-            test: ["CMD", "curl", "-fI", "localhost/nginx-status"]
-            interval: 1s
-            timeout: 1s
-            retries: 10
+  app:
+    container_name: app
+    build: .
+    image: edmitry/php-fpm
+    restart: always
+    volumes:
+      - socks:/socks
+      - ./public:/app/public
+      - ./docker/app/conf/php/preload.ini:/usr/local/etc/php/conf.d/preload.ini
+    healthcheck:
+      test: ["CMD", "curl", "-fI", "nginx"]
+      interval: 1s
+      timeout: 1s
+      retries: 10
+  nginx:
+    container_name: nginx
+    image: edmitry/nginx
+    restart: always
+    volumes:
+      - socks:/socks
+      - ./public:/web
+    ports:
+      - 80:80
+    depends_on:
+      - app
+    healthcheck:
+      test: ["CMD", "curl", "-fI", "localhost/nginx-status"]
+      interval: 1s
+      timeout: 1s
+      retries: 10
 volumes:
-    socks:
+  socks:
