@@ -8,34 +8,14 @@ class AppTest extends Unit
 {
     protected UnitTester $tester;
 
-    public function testSetEnv(): void
-    {
-        unset($_ENV['APP_ENV'], $_SERVER['APP_ENV']);
-        putenv('APP_ENV');
-        $method = $this->tester::getReflectionMethod(App::class, 'setEnv');
-        $method->invokeArgs(null, []);
-        $this->assertContains(getenv('APP_ENV'), ['prod', 'dev']);
-        putenv('APP_ENV=dev');
-    }
-
-    public function testSetErrorRunner(): void
+    public function testSetErrorHandler(): void
     {
         putenv('APP_ENV=dev');
-        $method = $this->tester::getReflectionMethod(App::class, 'setErrorRunner');
+        $method = $this->tester::getReflectionMethod(App::class, 'setErrorHandler');
         $method->invokeArgs(null, []);
         $prev_handler = set_error_handler(fn($code, $message) => false);
         $this->assertInstanceOf(ErrorHandler::class, $prev_handler[0]);
         restore_error_handler();
         restore_error_handler();
-    }
-
-    public function testConstructor(): void
-    {
-        $this->assertInstanceOf(App::class, new App());
-    }
-
-    public function testRun(): void
-    {
-        (new App())->run();
     }
 }

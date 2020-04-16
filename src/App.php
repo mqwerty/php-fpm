@@ -2,8 +2,10 @@
 
 namespace App;
 
-use Dotenv\Dotenv;
-use Whoops\Handler\HandlerInterface;
+use App\Command\Example;
+use Monolog\Handler\ErrorLogHandler;
+use Monolog\Logger;
+use Symfony\Component\Console\Application;
 use Whoops\Handler\JsonResponseHandler;
 use Whoops\Handler\PlainTextHandler;
 use Whoops\Handler\PrettyPageHandler;
@@ -13,43 +15,45 @@ final class App
 {
     public function __construct()
     {
-        self::setEnv();
-        self::setErrorRunner();
-    }
-
-    private static function setEnv(): void
-    {
-        $dotenv = Dotenv::createImmutable(__DIR__ . '/..', 'default.env');
-        $dotenv->load();
-        $dotenv->required('APP_ENV')->allowedValues(['prod', 'dev']);
-    }
-
-    private static function setErrorRunner(): void
-    {
-        $handler = self::getErrorHanler();
-        if ($handler) {
-            (new ErrorRunner())
-                ->pushHandler($handler)
-                ->register();
-        }
-    }
-
-    private static function getErrorHanler(): ?HandlerInterface
-    {
+        self::setErrorHandler();
         if ('cli' === PHP_SAPI) {
-            return new PlainTextHandler();
+            self::setConsoleCommands();
         }
-        if (getenv('APP_ENV') === 'dev') {
-            if (isset($_SERVER['HTTP_ACCEPT']) && false !== strpos($_SERVER['HTTP_ACCEPT'], 'application/json')) {
-                return new JsonResponseHandler();
-            }
-            return new PrettyPageHandler();
-        }
-        return null;
     }
 
-    public function run(): void
+    private static function setErrorHandler(): void
     {
-        echo Task::run();
+        $logger = new Logger('app_error');
+        $logger->pushHandler(new ErrorLogHandler());
+
+        $handler = new PlainTextHandler($logger);
+        $handler->loggerOnly(true);
+
+        $runner = new ErrorRunner();
+        $runner->pushHandler($handler);
+
+        if ('dev' === getenv('APP_ENV')) {
+            $runner->pushHandler(
+                isset($_SERVER['HTTP_ACCEPT']) && false !== strpos($_SERVER['HTTP_ACCEPT'], 'application/json')
+                    ? new JsonResponseHandler()
+                    : new PrettyPageHandler()
+            );
+        }
+
+        $runner->register();
+    }
+
+    private static function setConsoleCommands(): void
+    {
+        $console = new Application();
+
+        if (getenv('APP_ENV') === 'prod') {
+            $console->setCatchExceptions(false);
+        }
+
+        $console->add(new Example());
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $console->run();
     }
 }
