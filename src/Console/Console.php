@@ -9,6 +9,11 @@ final class Console extends Application
 {
     public function __construct()
     {
+        /** @noinspection PhpFullyQualifiedNameUsageInspection */
+        if (class_exists(\PHPUnit\Runner\Version::class, false)) {
+            return;
+        }
+
         parent::__construct();
 
         if ('prod' === getenv('APP_ENV')) {
