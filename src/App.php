@@ -2,10 +2,9 @@
 
 namespace App;
 
-use App\Command\Example;
+use App\Console\Console;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Logger;
-use Symfony\Component\Console\Application;
 use Whoops\Handler\JsonResponseHandler;
 use Whoops\Handler\PlainTextHandler;
 use Whoops\Handler\PrettyPageHandler;
@@ -17,7 +16,8 @@ final class App
     {
         self::setErrorHandler();
         if ('cli' === PHP_SAPI) {
-            self::setConsoleCommands();
+            /* @phan-suppress-next-line PhanNoopNew */
+            new Console();
         }
     }
 
@@ -41,19 +41,5 @@ final class App
         }
 
         $runner->register();
-    }
-
-    private static function setConsoleCommands(): void
-    {
-        $console = new Application();
-
-        if (getenv('APP_ENV') === 'prod') {
-            $console->setCatchExceptions(false);
-        }
-
-        $console->add(new Example());
-
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $console->run();
     }
 }
