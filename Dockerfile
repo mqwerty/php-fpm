@@ -1,4 +1,5 @@
 FROM php:7.4-fpm-alpine
+# FROM php:7.4-cli-alpine
 
 RUN addgroup -g 3000 app && adduser --uid 3000 -G app -D app
 
