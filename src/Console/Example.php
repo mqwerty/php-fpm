@@ -8,14 +8,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class Example extends Command
 {
-    protected static string $defaultName = 'app:example';
+    protected static $defaultName = 'app:example';
 
     protected function configure(): void
     {
         $this->setDescription('Example');
     }
 
-    /** @noinspection PhpSignatureMismatchDuringInheritanceInspection */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('Example');
