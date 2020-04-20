@@ -13,4 +13,10 @@ class AppTest extends Unit
     {
         new App();
     }
+
+    public function testGetEnv(): void
+    {
+        new App();
+        $this->assertEquals('dev', App::getEnv());
+    }
 }

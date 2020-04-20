@@ -16,6 +16,13 @@ final class App
         new ErrorHandler();
         if ('cli' === PHP_SAPI) {
             new Console();
+        } else {
+            Router::dispatch();
         }
+    }
+
+    public static function getEnv(): string
+    {
+        return getenv('APP_ENV') ?: 'prod';
     }
 }

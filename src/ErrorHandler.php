@@ -22,14 +22,22 @@ class ErrorHandler
         $runner = new ErrorRunner();
         $runner->pushHandler($handler);
 
-        if ('cli' !== PHP_SAPI && 'dev' === getenv('APP_ENV')) {
+        $this->devHandler($runner);
+        $runner->register();
+    }
+
+    /**
+     * @param $runner
+     * @codeCoverageIgnore
+     */
+    protected function devHandler(&$runner): void
+    {
+        if ('cli' !== PHP_SAPI && 'dev' === App::getEnv()) {
             $runner->pushHandler(
                 isset($_SERVER['HTTP_ACCEPT']) && false !== strpos($_SERVER['HTTP_ACCEPT'], 'application/json')
                     ? new JsonResponseHandler()
                     : new PrettyPageHandler()
             );
         }
-
-        $runner->register();
     }
 }
