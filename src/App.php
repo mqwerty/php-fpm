@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Console\Console;
 use DI\Container;
 use DI\ContainerBuilder;
 
@@ -22,7 +21,7 @@ final class App
     public function run(): void
     {
         'cli' === PHP_SAPI
-            ? new Console()
+            ? Console::dispatch()
             : Router::dispatch();
     }
 
