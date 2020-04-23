@@ -55,7 +55,6 @@ final class Router
 
     public static function routes(RouteCollector $r): void
     {
-        $r->addRoute('GET', '/', [Action\Example::class, 'execute']);
-        $r->addRoute('GET', '/event/{id}', [Action\Example::class, 'execute']);
+        $r->addRoute(Action\Example::getMethods(), Action\Example::getPath(), [Action\Example::class, 'execute']);
     }
 }
