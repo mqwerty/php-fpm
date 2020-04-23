@@ -3,4 +3,4 @@
 chdir(__DIR__);
 require_once __DIR__ . '/vendor/autoload.php';
 
-new App\App();
+(new App\App())->run();
