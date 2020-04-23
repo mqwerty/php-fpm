@@ -4,17 +4,35 @@ namespace App;
 
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
+use Laminas\Diactoros\ServerRequestFactory;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 
 use function FastRoute\cachedDispatcher;
 
 final class Router
 {
-    private static function routes(): Dispatcher
+    public static function dispatch(): void
+    {
+        $routeInfo = self::dispatcher()->dispatch($_SERVER['REQUEST_METHOD'], self::decodeUri());
+        switch ($routeInfo[0]) {
+            case Dispatcher::NOT_FOUND:
+                http_response_code(404);
+                break;
+            case Dispatcher::METHOD_NOT_ALLOWED:
+                http_response_code(405);
+                break;
+            case Dispatcher::FOUND:
+                [, $handler, $vars] = $routeInfo;
+                $request = ServerRequestFactory::fromGlobals();
+                $response = $handler($request, $vars);
+                (new SapiEmitter())->emit($response);
+        }
+    }
+
+    private static function dispatcher(): Dispatcher
     {
         return cachedDispatcher(
-            static function (RouteCollector $r) {
-                $r->addRoute('GET', '/', [Action\Example::class, 'get']);
-            },
+            [self::class, 'routes'],
             [
                 'cacheFile' => getenv('APP_ROUTE_CACHE') ?: '/tmp/app.route.cache',
                 'cacheDisabled' => 'dev' === App::getEnv(),
@@ -35,22 +53,9 @@ final class Router
         return rawurldecode($uri);
     }
 
-    public static function dispatch(): void
+    public static function routes(RouteCollector $r): void
     {
-        $routeInfo = self::routes()->dispatch($_SERVER['REQUEST_METHOD'], self::decodeUri());
-        switch ($routeInfo[0]) {
-            case Dispatcher::NOT_FOUND:
-                http_response_code(404);
-                break;
-            case Dispatcher::METHOD_NOT_ALLOWED:
-                http_response_code(405);
-                break;
-            case Dispatcher::FOUND:
-                [, $handler, $vars] = $routeInfo;
-                /** @var \App\Responce */
-                $responce = call_user_func_array($handler, $vars);
-                $responce->emit();
-                break;
-        }
+        $r->addRoute('GET', '/', [Action\Example::class, 'execute']);
+        $r->addRoute('GET', '/event/{id}', [Action\Example::class, 'execute']);
     }
 }

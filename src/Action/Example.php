@@ -2,12 +2,16 @@
 
 namespace App\Action;
 
-use App\Responce;
+use Laminas\Diactoros\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class Example
 {
-    public static function get(): Responce
+    public static function execute(ServerRequestInterface $request, array $args = []): ResponseInterface
     {
-        return new Responce('Example');
+        $response = new Response();
+        $response->getBody()->write('Example');
+        return $response;
     }
 }
