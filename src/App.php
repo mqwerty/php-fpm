@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Dev\ErrorHandler;
 use DI\Container;
 use DI\ContainerBuilder;
 
@@ -9,17 +10,18 @@ final class App
 {
     private static Container $container;
 
-    /**
-     * @phan-suppress PhanNoopNew
-     */
     public function __construct()
     {
-        new ErrorHandler();
+        // for prod enviroment use `docker logs` and fluentd
+        if (class_exists(ErrorHandler::class)) {
+            ErrorHandler::register();
+        }
         self::setContainer();
     }
 
     public function run(): void
     {
+        /** @noinspection PhpUnhandledExceptionInspection */
         'cli' === PHP_SAPI
             ? Console::dispatch()
             : Router::dispatch();

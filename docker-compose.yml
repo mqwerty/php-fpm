@@ -3,7 +3,7 @@ services:
   app:
     container_name: app
     build: .
-    image: edmitry/php-fpm
+    image: edmitry/php
     restart: always
     volumes:
       - socks:/socks
@@ -16,11 +16,6 @@ services:
       - PHAN_DISABLE_XDEBUG_WARN=1
       - PHAN_ALLOW_XDEBUG=0
       - PHP_IDE_CONFIG=serverName=app
-    healthcheck:
-      test: ["CMD", "curl", "-fI", "nginx"]
-      interval: 1s
-      timeout: 1s
-      retries: 10
   nginx:
     container_name: nginx
     image: edmitry/nginx

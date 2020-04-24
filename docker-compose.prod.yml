@@ -2,27 +2,21 @@ version: '3'
 services:
   app:
     container_name: app
-    build: .
-    image: edmitry/php-fpm
+    image: edmitry/php
     restart: always
     volumes:
       - socks:/socks
       #- ./public:/app/public
-      - ./docker/app/conf/php/preload.ini:/usr/local/etc/php/conf.d/preload.ini
+      #- ./docker/app/conf/php/preload.ini:/usr/local/etc/php/conf.d/preload.ini
     env_file:
       - ./.env
-    healthcheck:
-      test: ["CMD", "curl", "-fI", "nginx"]
-      interval: 1s
-      timeout: 1s
-      retries: 10
   nginx:
     container_name: nginx
     image: edmitry/nginx
     restart: always
     volumes:
       - socks:/socks
-      - ./public:/web
+      #- ./public:/web
     ports:
       - 80:80
     depends_on:

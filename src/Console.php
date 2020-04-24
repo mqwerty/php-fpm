@@ -7,17 +7,16 @@ use Symfony\Component\Console\CommandLoader\FactoryCommandLoader;
 
 final class Console
 {
+    /**
+     * @throws \Exception
+     */
     public static function dispatch(): void
     {
         $app = new Application();
-
-        if ('prod' === App::getEnv()) {
+        if ('dev' !== App::getEnv()) {
             $app->setCatchExceptions(false);
         }
-
         $app->setCommandLoader(new FactoryCommandLoader(self::commands()));
-
-        /** @noinspection PhpUnhandledExceptionInspection */
         $app->run();
     }
 
