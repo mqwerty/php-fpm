@@ -22,9 +22,9 @@ final class Router
                 http_response_code(405);
                 break;
             case Dispatcher::FOUND:
-                [, $handler, $vars] = $routeInfo;
+                [, $handler, $args] = $routeInfo;
                 $request = ServerRequestFactory::fromGlobals();
-                $response = $handler($request, $vars);
+                $response = $handler($request, $args);
                 (new SapiEmitter())->emit($response);
         }
     }
