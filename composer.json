@@ -47,6 +47,7 @@
     "cover": "codecept run --coverage --coverage-html",
     "stan": "phan --color --progress-bar",
     "cs_check": "phpcs ./src --standard=PSR12",
-    "cs_fix": "phpcbf ./src --standard=PSR12"
+    "cs_fix": "phpcbf ./src --standard=PSR12",
+    "post-create-project-cmd": "cp ./.env.example ./.env"
   }
 }
