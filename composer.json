@@ -1,7 +1,14 @@
 {
+  "name": "mqwerty/php",
   "type": "project",
-  "license": "proprietary",
-  "description": "",
+  "license": "MIT",
+  "description": "Skeleton for PHP projects",
+  "authors": [
+    {
+      "name": "Dmitrii Elkin",
+      "email": "de@mqwerty.ru"
+    }
+  ],
   "config": {
     "optimize-autoloader": true,
     "sort-packages": true
