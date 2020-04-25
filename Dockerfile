@@ -1,7 +1,7 @@
 FROM php:7.4-fpm-alpine
 # FROM php:7.4-cli-alpine
 
-RUN addgroup -g 3000 app && adduser --uid 3000 -G app -D app
+RUN addgroup -g 3000 app && adduser --uid 3000 -G app -D app && mkdir /socks && chown app:app /socks
 
 ARG DEPS="git"
 RUN apk add --no-cache $DEPS
@@ -19,14 +19,11 @@ COPY ./docker/app/conf/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/
 
 COPY ./docker/app/conf/php/custom.ini /usr/local/etc/php/conf.d/
 
-RUN mkdir /socks && chown app:app /socks
-
 WORKDIR /app
 RUN chown app:app /app
 
 USER app
-RUN mkdir /home/app/.opcache \
-    && echo 'alias c="composer"' >> /home/app/.profile \
+RUN echo 'alias c="composer"' >> /home/app/.profile \
     && echo 'alias l="ls -lah"' >> /home/app/.profile
 
 COPY --chown=app:app . .
