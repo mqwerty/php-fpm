@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Dev\ErrorHandler;
 use DI\Container;
 use DI\ContainerBuilder;
 
@@ -12,8 +11,9 @@ final class App
 
     public function __construct()
     {
-        // for prod enviroment use `docker logs` and fluentd
-        if (class_exists(ErrorHandler::class)) {
+        // prod - use `docker logs` and fluentd
+        // dev - convert php errors to exceptions
+        if ('prod' !== self::getEnv()) {
             ErrorHandler::register();
         }
         self::setContainer();
@@ -22,9 +22,9 @@ final class App
     public function run(): void
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        'cli' === PHP_SAPI
-            ? Console::dispatch()
-            : Router::dispatch();
+        false === getenv('RR_HTTP')
+            ? Console::handle()
+            : Router::handle();
     }
 
     private static function setContainer(): void
@@ -49,5 +49,11 @@ final class App
     public static function get(string $name)
     {
         return self::$container->get($name);
+    }
+
+    public static function getRouter(): Router
+    {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        return self::get('router');
     }
 }

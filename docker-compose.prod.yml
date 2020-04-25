@@ -2,29 +2,15 @@ version: '3'
 services:
   app:
     container_name: app
-    image: edmitry/php
+    build: .
     restart: always
-    volumes:
-      - socks:/socks
-      #- ./public:/app/public
-      #- ./docker/app/conf/php/preload.ini:/usr/local/etc/php/conf.d/preload.ini
-    env_file:
-      - ./.env
-  nginx:
-    container_name: nginx
-    image: edmitry/nginx
-    restart: always
-    volumes:
-      - socks:/socks
-      #- ./public:/web
     ports:
       - 80:80
-    depends_on:
-      - app
+      - 2113:2113
+    env_file:
+      - ./.env
     healthcheck:
-      test: ["CMD", "curl", "-fI", "localhost/nginx-status"]
+      test: ["CMD", "curl", "-fI", "localhost:2113"]
       interval: 1s
       timeout: 1s
       retries: 10
-volumes:
-  socks:

@@ -10,7 +10,7 @@ final class Console
     /**
      * @throws \Exception
      */
-    public static function dispatch(): void
+    public static function handle(): void
     {
         $app = new Application();
         if ('dev' !== App::getEnv()) {

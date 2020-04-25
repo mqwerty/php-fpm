@@ -1,0 +1,21 @@
+http:
+  address: :80
+  workers:
+    user: "app"
+    command: "php /app/index.php"
+
+health:
+  address: 0.0.0.0:2113
+
+static:
+  dir:   "/app/public"
+  forbid: [".php", ".htaccess"]
+
+limit:
+  interval: 1
+  services:
+    http:
+      maxMemory: 100
+      TTL: 0
+      idleTTL: 0
+      execTTL: 60
