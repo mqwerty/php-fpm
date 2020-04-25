@@ -29,7 +29,6 @@
     "symfony/console": "^5.0"
   },
   "require-dev": {
-    "ext-ast": "*",
     "codeception/codeception": "^4.0",
     "codeception/module-asserts": "^1.0",
     "filp/whoops": "^2.7",
