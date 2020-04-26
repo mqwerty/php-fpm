@@ -12,9 +12,11 @@ final class App
 
     public function __construct()
     {
-        // for prod enviroment use `docker logs` and fluentd
+        // In dev enviroment convert php errors to exceptions (including notice)
+        // In prod enviroment see `docker logs`
+        /** @phan-suppress-next-line PhanUndeclaredClassReference */
         if (class_exists(ErrorHandler::class)) {
-            ErrorHandler::register();
+            ErrorHandler::register(); /** @phan-suppress-current-line PhanUndeclaredClassMethod */
         }
         self::setContainer();
     }
@@ -22,9 +24,7 @@ final class App
     public function run(): void
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        'cli' === PHP_SAPI
-            ? Console::dispatch()
-            : Router::dispatch();
+        'cli' === PHP_SAPI ? Console::handle() : Router::handle();
     }
 
     private static function setContainer(): void

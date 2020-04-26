@@ -35,7 +35,6 @@
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",
-    "ext-ast": "*",
     "codeception/codeception": "^4.0",
     "codeception/module-asserts": "^1.0",
     "phan/phan": "^2.4",
@@ -46,8 +45,8 @@
     "test": "codecept run --debug",
     "cover": "codecept run --coverage --coverage-html",
     "stan": "phan --color --progress-bar",
-    "cs_check": "phpcs ./src --standard=PSR12",
-    "cs_fix": "phpcbf ./src --standard=PSR12",
+    "cs:check": "phpcs ./src --standard=PSR12",
+    "cs:fix": "phpcbf ./src --standard=PSR12",
     "post-create-project-cmd": "cp ./.env.example ./.env"
   }
 }
