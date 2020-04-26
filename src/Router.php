@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Dev\ErrorHandler;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use Laminas\Diactoros\Response;
@@ -64,9 +63,34 @@ final class Router
                 error_log((string) $e);
                 $response = 'prod' === App::getEnv()
                     ? new Response\EmptyResponse(500)
-                    : ErrorHandler::toResponce($e);
+                    : self::exToResponce($e);
                 $psr7->respond($response);
             }
         }
+    }
+
+    public static function exToArray(Throwable $e): array
+    {
+        return [
+            'status' => 'error',
+            'error' => [
+                'class' => get_class($e),
+                'msg' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTrace(),
+            ],
+        ];
+    }
+
+    public static function exToResponce($e): Response
+    {
+        return new Response\JsonResponse(
+            static::exToArray($e),
+            500,
+            [],
+            JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
+        );
     }
 }
