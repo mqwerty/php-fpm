@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Dev;
 
 use Throwable;
 use Laminas\Diactoros\Response;

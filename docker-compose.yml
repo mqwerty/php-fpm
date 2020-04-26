@@ -18,7 +18,7 @@ services:
       - PHAN_DISABLE_XDEBUG_WARN=1
       - PHAN_ALLOW_XDEBUG=0
       - PHP_IDE_CONFIG=serverName=app
-    entrypoint: /usr/local/bin/rr serve -d -c /usr/local/etc/roadrunner/rr.yml
+    command: ["-d"]
     healthcheck:
       test: ["CMD", "curl", "-fI", "localhost:2113"]
       interval: 1s

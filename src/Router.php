@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Dev\ErrorHandler;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use Laminas\Diactoros\Response;

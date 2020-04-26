@@ -29,4 +29,6 @@ RUN find /app -type d -print0 | xargs -t -0 -P 4 chmod 0755 > /dev/null 2>&1 \
 RUN composer install --no-cache --no-dev \
     && /app/vendor/bin/rr get-binary -l /usr/local/bin
 
-ENTRYPOINT /usr/local/bin/rr serve -c /usr/local/etc/roadrunner/rr.yml
+COPY docker-entrypoint.sh /usr/local/bin/
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD []
