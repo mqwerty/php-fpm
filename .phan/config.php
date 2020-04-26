@@ -30,7 +30,6 @@ return [
     'directory_list' => [
         'vendor/',
         'src/',
-        'src-dev/',
     ],
 
     'file_list' => [],

@@ -14,8 +14,9 @@ final class App
     {
         // In dev enviroment convert php errors to exceptions (including notice)
         // In prod enviroment see `docker logs`
+        /** @phan-suppress-next-line PhanUndeclaredClassReference */
         if (class_exists(ErrorHandler::class)) {
-            ErrorHandler::register();
+            ErrorHandler::register(); /** @phan-suppress-current-line PhanUndeclaredClassMethod */
         }
         self::setContainer();
     }
