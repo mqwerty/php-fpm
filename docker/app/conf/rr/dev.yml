@@ -5,7 +5,6 @@ http:
     command: "php /app/index.php"
     pool:
       numWorkers: 1
-      maxJobs: 1
 
 health:
   address: 0.0.0.0:2113
