@@ -3,6 +3,7 @@ services:
   app:
     container_name: app
     build: .
+    image: edmitry/php:rr
     restart: always
     volumes:
       - .:/app
@@ -11,7 +12,6 @@ services:
       - ./docker/app/conf/rr/dev.yml:/usr/local/etc/roadrunner/rr.yml
     ports:
       - 80:80
-      - 2113:2113
     env_file:
       - ./.env
     environment:

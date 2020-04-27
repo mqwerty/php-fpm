@@ -50,18 +50,24 @@ final class Router
 
     public static function handle(): void
     {
+        $env = App::getEnv();
         $relay = new StreamRelay(STDIN, STDOUT);
         $worker = new Worker($relay);
         $psr7 = new PSR7Client($worker);
         $router = new self();
         while ($request = $psr7->acceptRequest()) {
+            // jit debug, rr option http.workers.pool.maxJobs must be set to 1
+            if ('prod' !== $env && array_key_exists('XDEBUG_SESSION', $request->getCookieParams())) {
+                /** @noinspection ForgottenDebugOutputInspection PhpComposerExtensionStubsInspection */
+                xdebug_break();
+            }
             try {
                 $response = $router->dispatch($request);
                 $psr7->respond($response);
             } catch (Throwable $e) {
                 /** @noinspection ForgottenDebugOutputInspection */
                 error_log((string) $e);
-                $response = 'prod' === App::getEnv()
+                $response = 'prod' === $env
                     ? new Response\EmptyResponse(500)
                     : self::exToResponce($e);
                 $psr7->respond($response);

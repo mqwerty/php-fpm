@@ -1,9 +1,9 @@
 #!/bin/sh
 set -e
 
-if [[ ! -d /app/vendor ]]
+if [[ ! -d /app/vendor/spiral ]]
     then
-        composer install --no-dev
+        composer -n install --no-dev
 fi
 
 /usr/local/bin/rr serve -c /usr/local/etc/roadrunner/rr.yml $@
