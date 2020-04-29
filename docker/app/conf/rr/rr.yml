@@ -4,8 +4,12 @@ http:
     user: "app"
     command: "php /app/index.php"
 
+rpc:
+  enable: true
+  listen: tcp://:6001
+
 health:
-  address: 0.0.0.0:2113
+  address: :2113
 
 static:
   dir:   "/app/public"

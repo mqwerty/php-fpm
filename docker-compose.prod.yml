@@ -3,6 +3,7 @@ services:
   app:
     container_name: app
     build: .
+    image: edmitry/php:rr
     restart: always
     ports:
       - 80:80

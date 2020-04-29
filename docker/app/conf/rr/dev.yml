@@ -1,13 +1,17 @@
 http:
-  address: 0.0.0.0:80
+  address: :80
   workers:
     user: "app"
     command: "php /app/index.php"
     pool:
       numWorkers: 1
 
+rpc:
+  enable: true
+  listen: tcp://:6001
+
 health:
-  address: 0.0.0.0:2113
+  address: :2113
 
 static:
   dir:   "/app/public"
@@ -29,7 +33,3 @@ reload:
     http:
       dirs: ["/app"]
       recursive: true
-
-rpc:
-  enable: true
-  listen: tcp://:6001
