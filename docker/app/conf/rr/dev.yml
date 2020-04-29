@@ -6,16 +6,23 @@ http:
     pool:
       numWorkers: 1
 
+static:
+  dir:   "/app/public"
+  forbid: [".php", ".htaccess"]
+
+headers:
+  response:
+    "X-Frame-Options": "deny"
+    "X-Content-Type-Options": "nosniff"
+    "X-XSS-Protection": "1; mode=block"
+    "Referrer-Policy": "no-referrer-when-downgrade"
+
 rpc:
   enable: true
   listen: tcp://:6001
 
 health:
   address: :2113
-
-static:
-  dir:   "/app/public"
-  forbid: [".php", ".htaccess"]
 
 limit:
   interval: 1
