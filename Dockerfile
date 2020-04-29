@@ -29,6 +29,6 @@ RUN composer install --no-cache --no-dev \
     && /app/vendor/bin/rr get-binary -l /usr/local/bin
 
 EXPOSE 80 2113 6001
-COPY docker-entrypoint.sh /usr/local/bin/
+COPY ./docker-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD []
