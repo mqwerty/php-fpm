@@ -8,8 +8,6 @@ services:
       - socks:/socks
       #- ./public:/app/public
       #- ./docker/app/conf/php/preload.ini:/usr/local/etc/php/conf.d/preload.ini
-    env_file:
-      - ./.env
   nginx:
     container_name: nginx
     image: edmitry/nginx

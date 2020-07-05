@@ -10,8 +10,6 @@ services:
       - .:/app
       - ./docker/app/conf/php/dev.ini:/usr/local/etc/php/conf.d/dev.ini
       - ./docker/app/conf/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-    env_file:
-      - ./.env
     environment:
       - PHAN_DISABLE_XDEBUG_WARN=1
       - PHAN_ALLOW_XDEBUG=0

@@ -2,28 +2,36 @@
 
 namespace App;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\CommandLoader\FactoryCommandLoader;
+use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
+use Throwable;
 
-final class Console
+class Console
 {
-    /**
-     * @throws \Exception
-     */
-    public static function handle(): void
+    protected CommandLoaderInterface $loader;
+    protected LoggerInterface $logger;
+    protected bool $consoleLogEx;
+
+    public function __construct(CommandLoaderInterface $loader, LoggerInterface $logger, bool $consoleLogEx)
     {
-        $app = new Application();
-        if ('dev' !== App::getEnv()) {
-            $app->setCatchExceptions(false);
-        }
-        $app->setCommandLoader(new FactoryCommandLoader(self::commands()));
-        $app->run();
+        $this->loader = $loader;
+        $this->logger = $logger;
+        $this->consoleLogEx = $consoleLogEx;
     }
 
-    private static function commands(): array
+    public function handle(): void
     {
-        return [
-            Command\Example::getDefaultName() => fn() => new Command\Example(),
-        ];
+        $app = new Application();
+        $app->setCommandLoader($this->loader);
+        $app->setCatchExceptions(false);
+        try {
+            $app->run();
+        } catch (Throwable $e) {
+            if ($this->consoleLogEx) {
+                $this->logger->error((string) $e);
+            }
+            echo $e . PHP_EOL;
+        }
     }
 }

@@ -9,14 +9,14 @@ use Whoops\Run as ErrorRunner;
 
 class ErrorHandler
 {
-    public static function register(): void
+    public function register(): void
     {
         (new ErrorRunner())
-            ->pushHandler(static::getHandler())
+            ->pushHandler($this->getHandler())
             ->register();
     }
 
-    protected static function getHandler() {
+    protected function getHandler() {
         if ('cli' === PHP_SAPI) {
             return new PlainTextHandler();
         }

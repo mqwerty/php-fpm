@@ -3,51 +3,35 @@
 namespace App;
 
 use Dev\ErrorHandler;
-use DI\Container;
-use DI\ContainerBuilder;
+use Mqwerty\DI\Container;
 
-final class App
+class App
 {
-    private static Container $container;
+    protected static Container $container;
 
-    public function __construct()
+    /**
+     * @suppress PhanUndeclaredClassReference
+     * @suppress PhanUndeclaredClassMethod
+     * @suppress PhanMissingRequireFile
+     * @noinspection PhpIncludeInspection
+     * @param array $config
+     */
+    public function __construct(array $config = [])
     {
         // In dev enviroment convert php errors to exceptions (including notice)
         // In prod enviroment see `docker logs`
-        /** @phan-suppress-next-line PhanUndeclaredClassReference */
         if (class_exists(ErrorHandler::class)) {
-            ErrorHandler::register(); /** @phan-suppress-current-line PhanUndeclaredClassMethod */
+            (new ErrorHandler())->register();
         }
-        self::setContainer();
+        $configInitial = file_exists('./config.initial.php') ? require './config.initial.php' : [];
+        $configLocal = file_exists('./config.php') ? require './config.php' : [];
+        $config = array_merge($configInitial, $configLocal, $config);
+        static::$container = new Container($config);
     }
 
     public function run(): void
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        'cli' === PHP_SAPI ? Console::handle() : Router::handle();
-    }
-
-    private static function setContainer(): void
-    {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        self::$container = (new ContainerBuilder())
-            ->addDefinitions([])
-            ->build();
-    }
-
-    public static function getEnv(): string
-    {
-        return getenv('APP_ENV') ?: 'prod';
-    }
-
-    /**
-     * @param string $name
-     * @return mixed
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
-     */
-    public static function get(string $name)
-    {
-        return self::$container->get($name);
+        $handler = 'cli' === PHP_SAPI ? Console::class : Router::class;
+        static::$container->get($handler)->handle();
     }
 }

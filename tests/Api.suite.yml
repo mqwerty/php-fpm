@@ -1,0 +1,9 @@
+actor: ApiTester
+modules:
+  enabled:
+    - Asserts
+    - PhpBrowser:
+        url: http://nginx:80
+    - REST:
+        depends: PhpBrowser
+  step_decorators: ~

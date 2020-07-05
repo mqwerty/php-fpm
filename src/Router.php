@@ -2,67 +2,68 @@
 
 namespace App;
 
+use App\Exception\HttpException;
 use FastRoute\Dispatcher;
-use FastRoute\RouteCollector;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
-use function FastRoute\cachedDispatcher;
-
-final class Router
+class Router
 {
-    public static function handle(): void
+    protected Dispatcher $dispatcher;
+    protected ContainerInterface $container;
+    protected LoggerInterface $logger;
+
+    public function __construct(Dispatcher $dispatcher, ContainerInterface $container, LoggerInterface $logger)
+    {
+        $this->dispatcher = $dispatcher;
+        $this->container = $container;
+        $this->logger = $logger;
+    }
+
+    public function handle(): void
     {
         $request = ServerRequestFactory::fromGlobals();
 
-        if ('dev' !== App::getEnv()) {
-            try {
-                $response = self::dispatch($request);
-            } catch (Throwable $e) {
-                /** @noinspection ForgottenDebugOutputInspection */
-                error_log((string) $e);
-                $response = new Response\EmptyResponse(500);
+        try {
+            $response = $this->dispatch($request);
+        } catch (Throwable $e) {
+            $this->logger->error((string) $e);
+            if ('dev' === $this->container->get('env')) {
+                /** @noinspection PhpUnhandledExceptionInspection */
+                throw $e;
             }
-            (new SapiEmitter())->emit($response);
-            return;
+            $response = new Response\EmptyResponse(
+                is_a($e, HttpException::class) ? $e->getCode() : 500
+            );
         }
 
-        // In dev enviroment - no catch
-        $response = self::dispatch($request);
         (new SapiEmitter())->emit($response);
     }
 
-    public static function dispatch(ServerRequestInterface $request): ResponseInterface
+    /**
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @return \Psr\Http\Message\ResponseInterface
+     * @SuppressWarnings(PHPMD.UndefinedVariable)
+     */
+    public function dispatch(ServerRequestInterface $request): ResponseInterface
     {
-        $routeInfo = self::dispatcher()->dispatch($request->getMethod(), $request->getUri()->getPath());
+        $routeInfo = $this->dispatcher->dispatch($request->getMethod(), $request->getUri()->getPath());
         switch ($routeInfo[0]) {
             case Dispatcher::FOUND:
                 [, $handler, $args] = $routeInfo;
-                return $handler($request, $args);
+                $ctl = $this->container->get($handler[0]);
+                $method = $handler[1];
+                return $ctl->$method($request, $args);
             case Dispatcher::METHOD_NOT_ALLOWED:
                 return new Response\EmptyResponse(405);
             default:
                 return new Response\EmptyResponse(404);
         }
-    }
-
-    private static function dispatcher(): Dispatcher
-    {
-        return cachedDispatcher(
-            [self::class, 'routes'],
-            [
-                'cacheFile' => getenv('APP_ROUTE_CACHE') ?: '/tmp/app.route.cache',
-                'cacheDisabled' => 'dev' === App::getEnv(),
-            ]
-        );
-    }
-
-    public static function routes(RouteCollector $r): void
-    {
-        $r->addRoute(Action\Example::getMethods(), Action\Example::getPath(), [Action\Example::class, 'execute']);
     }
 }
