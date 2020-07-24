@@ -32,6 +32,9 @@ final class IndexController implements ControllerBase
     public function index(ServerRequestInterface $request, array $args = []): ResponseInterface
     {
         $this->logger->debug('Example');
-        return new Response\JsonResponse(['result' => 'test']);
+
+        $response = new Response();
+        $response->getBody()->write('Example');
+        return $response;
     }
 }

@@ -18,6 +18,7 @@ class IndexTest extends Unit
     {
         $ctl = new IndexController(new Logger('test'));
         $result = $ctl->index(new ServerRequest());
-        static::assertEquals(200, $result->getStatusCode());
+        static::assertSame(200, $result->getStatusCode());
+        static::assertSame('Example', $result->getBody()->__toString());
     }
 }
