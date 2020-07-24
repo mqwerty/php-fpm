@@ -14,7 +14,7 @@ class CommandLoaderFactory
         return new FactoryCommandLoader(static::commands($c));
     }
 
-    public static function commands(ContainerInterface $c): array
+    protected static function commands(ContainerInterface $c): array
     {
         $cachefile = $c->get('consoleCache');
         $cacheEnabled = 'dev' !== $c->get('env');

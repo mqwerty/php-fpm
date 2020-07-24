@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
 
 return [
-    'env' => 'dev', // prod | dev
+    'env' => 'prod', // prod | dev
     'logLevel' => 'debug',
     'routerCache' => '/tmp/app.router.cache',
     'consoleCache' => '/tmp/app.console.cache',

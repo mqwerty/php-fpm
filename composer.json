@@ -53,7 +53,6 @@
     "stan:phan": "phan --color --progress-bar",
     "cs:check": "phpcs ./src --standard=PSR12",
     "cs:fix": "phpcbf ./src --standard=PSR12",
-    "post-create-project-cmd": "cp ./config.example.php ./config.php",
     "check": [
       "@cs:check",
       "@stan:md",
