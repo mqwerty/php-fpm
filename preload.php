@@ -25,13 +25,20 @@ unset(
     $files['Monolog\\Handler\\DynamoDbHandler'],
     $files['Monolog\\Handler\\DoctrineCouchDBHandler'],
     $files['Monolog\\Formatter\\GelfMessageFormatter'],
-    $files['JsonException'],
     $files['Symfony\\Component\\Console\\Event\\ConsoleTerminateEvent'],
     $files['Symfony\\Component\\Console\\Event\\ConsoleEvent'],
     $files['Symfony\\Component\\Console\\Event\\ConsoleErrorEvent'],
     $files['Symfony\\Component\\Console\\Event\\ConsoleCommandEvent'],
     $files['Symfony\\Component\\Console\\EventListener\\ErrorListener'],
     $files['Symfony\\Component\\Console\\DependencyInjection\\AddConsoleCommandPass'],
+    $files['Symfony\\Polyfill\\Intl\\Normalizer\\Normalizer'],
+    $files['Symfony\\Component\\String\\UnicodeString'],
+    $files['Symfony\\Component\\String\\Slugger\\AsciiSlugger'],
+    $files['Symfony\\Component\\String\\CodePointString'],
+    $files['Symfony\\Component\\String\\ByteString'],
+    $files['Symfony\\Component\\String\\AbstractUnicodeString'],
+    $files['Normalizer'],
+    $files['JsonException'],
 );
 
 foreach ($files as $key => $file) {

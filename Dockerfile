@@ -24,7 +24,8 @@ RUN chown app:app /app
 
 USER app
 RUN echo 'alias c="composer"' >> /home/app/.profile \
-    && echo 'alias l="ls -lah"' >> /home/app/.profile
+    && echo 'alias l="ls -lah"' >> /home/app/.profile \
+    && mkdir /home/app/.opcache
 
 COPY --chown=app:app . .
 RUN find /app -type d -print0 | xargs -t -0 -P 4 chmod 0755 > /dev/null 2>&1 \
