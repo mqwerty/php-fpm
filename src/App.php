@@ -23,7 +23,7 @@ class App
         if (class_exists(ErrorHandler::class)) {
             (new ErrorHandler())->register();
         }
-        $configInitial = file_exists('./config.initial.php') ? require './config.initial.php' : [];
+        $configInitial = file_exists('./config.dist.php') ? require './config.dist.php' : [];
         $configLocal = file_exists('./config.php') ? require './config.php' : [];
         $config = array_merge($configInitial, $configLocal, $config);
         static::$container = new Container($config);
