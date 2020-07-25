@@ -44,6 +44,11 @@
     "filp/whoops": "^2.7",
     "squizlabs/php_codesniffer": "^3.5"
   },
+  "replace": {
+    "symfony/polyfill-mbstring": "*",
+    "symfony/polyfill-ctype": "*",
+    "symfony/polyfill-php73": "*"
+  },
   "scripts": {
     "test": "codecept run --debug",
     "test:cover": "codecept run Unit --coverage --coverage-text",
