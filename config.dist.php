@@ -17,7 +17,6 @@ return [
     'consoleCache' => '/tmp/app.console.cache',
     'consoleLogEx' => false,
     'shared' => [
-        Container::class,
         LoggerInterface::class,
     ],
     LoggerInterface::class => static function ($c) {
