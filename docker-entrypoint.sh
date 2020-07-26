@@ -6,4 +6,4 @@ if [[ ! -d /app/vendor/spiral ]]
         composer -n install --no-dev
 fi
 
-/usr/local/bin/rr serve -c /usr/local/etc/roadrunner/rr.yml $@
+/home/app/bin/rr serve -c /usr/local/etc/roadrunner/rr.yml $@

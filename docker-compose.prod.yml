@@ -2,13 +2,10 @@ version: '3'
 services:
   app:
     container_name: app
-    build: .
     image: edmitry/php:rr
     restart: always
     ports:
-      - 80:80
-    env_file:
-      - ./.env
+      - 80:8000
     healthcheck:
       test: ["CMD", "curl", "-fI", "localhost:2113"]
       interval: 1s

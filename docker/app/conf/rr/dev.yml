@@ -1,16 +1,25 @@
 http:
-  address: :80
+  address: :8000
   workers:
-    user: "app"
     command: "php /app/index.php"
     pool:
       numWorkers: 1
+  maxRequestSize: 10
+  uploads:
+    forbid: [".php", ".sh"]
 
 static:
   dir:   "/app/public"
-  forbid: [".php", ".htaccess"]
+  forbid: [".php"]
 
 headers:
+  cors:
+    allowedOrigin: "*"
+    allowedHeaders: "*"
+    allowedMethods: "GET,POST,PUT,DELETE"
+    allowCredentials: true
+    exposedHeaders: "Content-Language, Content-Length, Content-Type, Cache-Control, Expires, Last-Modified, Pragma"
+    maxAge: 3600
   response:
     "X-Frame-Options": "deny"
     "X-Content-Type-Options": "nosniff"

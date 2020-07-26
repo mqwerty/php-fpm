@@ -40,13 +40,7 @@ return [
 
     'exclude_file_list' => [],
 
-    'suppress_issue_types' => [
-//        'PhanUndeclaredFunctionInCallable',
-//        'PhanTypeArraySuspiciousNull',
-//        'PhanTypeArraySuspiciousNullable',
-//        'PhanTypeArraySuspicious',
-//        'PhanParamReqAfterOpt',
-    ],
+    'suppress_issue_types' => [],
 
     // Use -y {level} to overwrite (low=0, normal=5, critical=10).
     // Issue::SEVERITY_LOW, Issue::SEVERITY_NORMAL or Issue::SEVERITY_CRITICAL
@@ -119,7 +113,7 @@ return [
     //
     // This is useful for projects with complicated cross-file
     // globals that you have no hope of fixing.
-    'ignore_undeclared_variables_in_global_scope' => true,
+    'ignore_undeclared_variables_in_global_scope' => false,
 
     // Set this to false to emit `PhanUndeclaredFunction` issues for internal functions that Phan has signatures for,
     // but aren't available in the codebase, or the internal functions used to run Phan
@@ -275,5 +269,5 @@ return [
     // Documentation about available bundled plugins can be found [here](https://github.com/phan/phan/tree/master/.phan/plugins).
     //
     // Alternately, you can pass in the full path to a PHP file with the plugin's implementation (e.g. `'vendor/phan/phan/.phan/plugins/AlwaysReturnPlugin.php'`)
-    'plugins' => [],
+    'plugins' => ['DuplicateArrayKeyPlugin'],
 ];

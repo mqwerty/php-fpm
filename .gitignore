@@ -1,19 +1,27 @@
 # directories
-/.idea/
 /tmp/
 /vendor/
 
-# local files
-.env
-codeception.yml
+# files
+/codeception.yml
+/config.php
 
 # keep
 !.gitkeep
 
-# debug/cache
+# debug/log/cache
 bash.exe.stackdump
-.php_cs.cache
 nohup.out
+.php_cs.cache
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 # OS-specific files
 .DS_Store

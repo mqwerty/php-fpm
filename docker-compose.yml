@@ -11,9 +11,7 @@ services:
       - ./docker/app/conf/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - ./docker/app/conf/rr/dev.yml:/usr/local/etc/roadrunner/rr.yml
     ports:
-      - 80:80
-    env_file:
-      - ./.env
+      - 80:8000
     environment:
       - PHAN_DISABLE_XDEBUG_WARN=1
       - PHAN_ALLOW_XDEBUG=0

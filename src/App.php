@@ -3,36 +3,39 @@
 namespace App;
 
 use Dev\ErrorHandler;
-use DI\Container;
-use DI\ContainerBuilder;
+use Mqwerty\DI\Container;
+use Mqwerty\DI\NotFoundException;
 
-final class App
+class App
 {
-    private static Container $container;
+    protected Container $container;
 
-    public function __construct()
+    /**
+     * @suppress PhanUndeclaredClassReference
+     * @suppress PhanUndeclaredClassMethod
+     * @suppress PhanMissingRequireFile
+     * @param array $config
+     */
+    public function __construct(array $config = [])
     {
         // In dev enviroment convert php errors to exceptions (including notice)
         // In prod enviroment see `docker logs`
-        /** @phan-suppress-next-line PhanUndeclaredClassReference */
         if (class_exists(ErrorHandler::class)) {
-            ErrorHandler::register(); /** @phan-suppress-current-line PhanUndeclaredClassMethod */
+            (new ErrorHandler())->register();
         }
-        self::setContainer();
+        $configInitial = file_exists('./config.dist.php') ? require './config.dist.php' : [];
+        $configLocal = file_exists('./config.php') ? require './config.php' : [];
+        $config = array_merge($configInitial, $configLocal, $config);
+        $this->container = new Container($config);
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function run(): void
     {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        self::isHTTP() ? Router::handle() : Console::handle();
-    }
-
-    private static function setContainer(): void
-    {
-        /** @noinspection PhpUnhandledExceptionInspection */
-        self::$container = (new ContainerBuilder())
-            ->addDefinitions([])
-            ->build();
+        $handler = static::isHTTP() ? Router::class : Console::class;
+        $this->container->get($handler)->handle();
     }
 
     public static function isHTTP(): bool
@@ -40,19 +43,17 @@ final class App
         return 'true' === getenv('RR_HTTP');
     }
 
-    public static function getEnv(): string
-    {
-        return getenv('APP_ENV') ?: 'prod';
-    }
-
     /**
-     * @param string $name
-     * @return mixed
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @noinspection PhpFullyQualifiedNameUsageInspection
+     * @SuppressWarnings(PHPMD.MissingImport)
+     * @param mixed $val
      */
-    public static function get(string $name)
+    public static function dump($val): void
     {
-        return self::$container->get($name);
+        if (class_exists(\Spiral\Debug\Dumper::class)) {
+            $dumper = new \Spiral\Debug\Dumper();
+            $dumper->setRenderer(\Spiral\Debug\Dumper::ERROR_LOG, new \Spiral\Debug\Renderer\ConsoleRenderer());
+            $dumper->dump($val, \Spiral\Debug\Dumper::ERROR_LOG);
+        }
     }
 }

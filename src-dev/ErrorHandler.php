@@ -7,7 +7,7 @@ use Whoops\Run as ErrorRunner;
 
 class ErrorHandler
 {
-    public static function register(): void
+    public function register(): void
     {
         (new ErrorRunner())
             ->pushHandler(
