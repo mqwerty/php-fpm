@@ -3,7 +3,6 @@
 /vendor/
 
 # files
-/.env
 /codeception.yml
 /config.php
 
