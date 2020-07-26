@@ -1,7 +1,7 @@
 FROM php:7.4-fpm-alpine
-# FROM php:7.4-cli-alpine
 
-RUN addgroup -g 3000 app && adduser --uid 3000 -G app -D app && mkdir /socks && chown app:app /socks
+RUN addgroup -g 3000 app && adduser --uid 3000 -G app -D app \
+    && mkdir /socks && chown app:app /socks && chmod 0775 /socks
 
 ARG DEPS="git"
 RUN apk add --no-cache $DEPS
@@ -10,14 +10,15 @@ ARG DEPS_PHP="xdebug ast opcache"
 ADD https://raw.githubusercontent.com/mlocati/docker-php-extension-installer/master/install-php-extensions /usr/local/bin/
 RUN chmod u+x /usr/local/bin/install-php-extensions && sync && install-php-extensions $DEPS_PHP \
     && rm /usr/local/etc/php/conf.d/*xdebug.ini \
-    && mv /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
+    && mv /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
+    && rm /usr/local/bin/install-php-extensions
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+COPY ./docker/app/conf/php/custom.ini /usr/local/etc/php/conf.d/
+
 RUN rm -rf /usr/local/etc/php-fpm.d
 COPY ./docker/app/conf/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/
-
-COPY ./docker/app/conf/php/custom.ini /usr/local/etc/php/conf.d/
 
 WORKDIR /app
 RUN chown app:app /app

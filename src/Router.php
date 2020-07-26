@@ -47,11 +47,11 @@ class Router
     }
 
     /**
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @return \Psr\Http\Message\ResponseInterface
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
      * @SuppressWarnings(PHPMD.UndefinedVariable)
      */
-    public function dispatch(ServerRequestInterface $request): ResponseInterface
+    private function dispatch(ServerRequestInterface $request): ResponseInterface
     {
         $routeInfo = $this->dispatcher->dispatch($request->getMethod(), $request->getUri()->getPath());
         switch ($routeInfo[0]) {

@@ -4,16 +4,16 @@ namespace App;
 
 use Dev\ErrorHandler;
 use Mqwerty\DI\Container;
+use Mqwerty\DI\NotFoundException;
 
 class App
 {
-    protected static Container $container;
+    protected Container $container;
 
     /**
      * @suppress PhanUndeclaredClassReference
      * @suppress PhanUndeclaredClassMethod
      * @suppress PhanMissingRequireFile
-     * @noinspection PhpIncludeInspection
      * @param array $config
      */
     public function __construct(array $config = [])
@@ -26,12 +26,15 @@ class App
         $configInitial = file_exists('./config.dist.php') ? require './config.dist.php' : [];
         $configLocal = file_exists('./config.php') ? require './config.php' : [];
         $config = array_merge($configInitial, $configLocal, $config);
-        static::$container = new Container($config);
+        $this->container = new Container($config);
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function run(): void
     {
         $handler = 'cli' === PHP_SAPI ? Console::class : Router::class;
-        static::$container->get($handler)->handle();
+        $this->container->get($handler)->handle();
     }
 }
