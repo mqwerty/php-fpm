@@ -7,9 +7,9 @@ services:
     restart: always
     volumes:
       - socks:/socks
-      - .:/app
-      - ./docker/app/conf/php/dev.ini:/usr/local/etc/php/conf.d/dev.ini
-      - ./docker/app/conf/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - .:/app:cached
+      - ./docker/app/conf/php/dev.ini:/usr/local/etc/php/conf.d/dev.ini:ro
+      - ./docker/app/conf/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:ro
     environment:
       - PHAN_DISABLE_XDEBUG_WARN=1
       - PHAN_ALLOW_XDEBUG=0
@@ -20,7 +20,7 @@ services:
     restart: always
     volumes:
       - socks:/socks
-      - ./public:/web
+      - ./public:/web:cached
     ports:
       - 80:80
     depends_on:
