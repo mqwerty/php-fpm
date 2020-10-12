@@ -7,4 +7,6 @@ updates:
     day: "saturday"
     time: '04:00'
     timezone: Europe/Moscow
+  reviewers:
+    - "mqwerty"
   open-pull-requests-limit: 10

@@ -42,5 +42,6 @@ unset(
 );
 
 foreach ($files as $key => $file) {
+    /** @noinspection PhpComposerExtensionStubsInspection */
     opcache_compile_file($file);
 }
