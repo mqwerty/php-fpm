@@ -26,7 +26,7 @@
   "require": {
     "php": "^7.4",
     "laminas/laminas-diactoros": "^2.4",
-    "laminas/laminas-httphandlerrunner": "^1.2",
+    "laminas/laminas-httphandlerrunner": "^2.0",
     "monolog/monolog": "^2.1",
     "mqwerty/dependency-injection": "^1.2",
     "nikic/fast-route": "^1.3",
